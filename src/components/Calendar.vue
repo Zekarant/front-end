@@ -52,7 +52,7 @@ export default {
         async fetchCourses() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.get('http://localhost:5000/api/courses', {
+                const response = await axios.get('https://back-end-ml6y.onrender.com/api/courses', {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -74,7 +74,7 @@ export default {
         async fetchCyclists() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.get('http://localhost:5000/api/cyclists', {
+                const response = await axios.get('https://back-end-ml6y.onrender.com/api/cyclists', {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -107,7 +107,7 @@ export default {
                 if (this.selectedEvent.type === 'Tour') {
                     payload.stageNumber = this.selectedStage;
                 }
-                await axios.post('http://localhost:5000/api/pronostics', payload, {
+                await axios.post('https://back-end-ml6y.onrender.com/api/pronostics', payload, {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },

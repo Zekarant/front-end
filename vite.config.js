@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://back-end-ml6y.onrender.com',
         changeOrigin: true,
       },
     },

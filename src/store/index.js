@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         async register(name, email, password) {
             try {
-                const response = await axios.post('http://localhost:5000/api/auth/register', {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/auth/register', {
                     name,
                     email,
                     password,
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async login(email, password) {
             try {
-                const response = await axios.post('http://localhost:5000/api/auth/login', {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/auth/login', {
                     email,
                     password,
                 });
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await axios.get('http://localhost:5000/api/auth/user', {
+                    const response = await axios.get('https://back-end-ml6y.onrender.com/api/auth/user', {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },

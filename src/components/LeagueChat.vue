@@ -23,7 +23,7 @@ export default {
     },
     async created() {
         const authStore = useAuthStore();
-        this.socket = io('http://localhost:5000', {
+        this.socket = io('https://back-end-ml6y.onrender.com', {
             withCredentials: true,
             extraHeaders: {
                 "my-custom-header": "abcd"
@@ -36,7 +36,7 @@ export default {
         });
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/messages/${this.$route.params.leagueId}`, {
+            const response = await axios.get(`https://back-end-ml6y.onrender.com/api/messages/${this.$route.params.leagueId}`, {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`,
                 },

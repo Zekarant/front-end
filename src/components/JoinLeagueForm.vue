@@ -27,7 +27,7 @@ export default {
         const authStore = useAuthStore();
         console.log('Token:', authStore.token); // Ajoutez cette ligne pour vérifier le token
         try {
-            const response = await axios.get('http://localhost:5000/api/leagues', {
+            const response = await axios.get('https://back-end-ml6y.onrender.com/api/leagues', {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`,
                 },
@@ -47,7 +47,7 @@ export default {
             console.log('Token:', authStore.token); // Ajoutez cette ligne pour vérifier le token
             console.log('User:', authStore.user); // Ajoutez cette ligne pour vérifier l'utilisateur
             try {
-                const response = await axios.post('http://localhost:5000/api/leagues/join', {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/leagues/join', {
                     leagueId: this.leagueId,
                     userId: authStore.user._id // Assurez-vous que l'utilisateur est connecté
                 }, {

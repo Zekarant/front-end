@@ -52,14 +52,14 @@ export default {
     async created() {
         const authStore = useAuthStore();
         try {
-            const coursesResponse = await axios.get('http://localhost:5000/api/courses', {
+            const coursesResponse = await axios.get('https://back-end-ml6y.onrender.com/api/courses', {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`,
                 },
             });
             this.courses = coursesResponse.data;
 
-            const cyclistsResponse = await axios.get('http://localhost:5000/api/cyclists', {
+            const cyclistsResponse = await axios.get('https://back-end-ml6y.onrender.com/api/cyclists', {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`,
                 },
@@ -86,7 +86,7 @@ export default {
                 if (this.selectedCourse.type === 'Tour') {
                     payload.stageNumber = this.stageNumber;
                 }
-                const response = await axios.post('http://localhost:5000/api/pronostics', payload, {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/pronostics', payload, {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },

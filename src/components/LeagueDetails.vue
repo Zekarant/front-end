@@ -23,7 +23,7 @@ export default {
     async created() {
         const authStore = useAuthStore();
         try {
-            const response = await axios.get(`http://localhost:5000/api/leagues/${this.$route.params.leagueId}`, {
+            const response = await axios.get(`https://back-end-ml6y.onrender.com/api/leagues/${this.$route.params.leagueId}`, {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`,
                 },

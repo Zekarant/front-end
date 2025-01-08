@@ -181,7 +181,7 @@ export default {
         async fetchUsers() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.get('http://localhost:5000/api/auth/users', {
+                const response = await axios.get('https://back-end-ml6y.onrender.com/api/auth/users', {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -194,7 +194,7 @@ export default {
         async fetchCourses() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.get('http://localhost:5000/api/courses', {
+                const response = await axios.get('https://back-end-ml6y.onrender.com/api/courses', {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -207,7 +207,7 @@ export default {
         async fetchCyclists() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.get('http://localhost:5000/api/cyclists', {
+                const response = await axios.get('https://back-end-ml6y.onrender.com/api/cyclists', {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -227,7 +227,7 @@ export default {
         async updateUserRole(user) {
             const authStore = useAuthStore();
             try {
-                await axios.put('http://localhost:5000/api/admin/user/role', {
+                await axios.put('https://back-end-ml6y.onrender.com/api/admin/user/role', {
                     userId: user._id,
                     role: user.role
                 }, {
@@ -243,7 +243,7 @@ export default {
         async deleteUser(userId) {
             const authStore = useAuthStore();
             try {
-                await axios.delete(`http://localhost:5000/api/admin/user/${userId}`, {
+                await axios.delete(`https://back-end-ml6y.onrender.com/api/admin/user/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -265,7 +265,7 @@ export default {
         async updateCourse() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.put(`http://localhost:5000/api/courses/${this.selectedCourse._id}`, this.selectedCourse, {
+                const response = await axios.put(`https://back-end-ml6y.onrender.com/api/courses/${this.selectedCourse._id}`, this.selectedCourse, {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -280,7 +280,7 @@ export default {
         async deleteCourse(courseId) {
             const authStore = useAuthStore();
             try {
-                await axios.delete(`http://localhost:5000/api/courses/${courseId}`, {
+                await axios.delete(`https://back-end-ml6y.onrender.com/api/courses/${courseId}`, {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
                     },
@@ -303,7 +303,7 @@ export default {
         async announceWinner() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.put(`http://localhost:5000/api/courses/${this.selectedCourse._id}`, {
+                const response = await axios.put(`https://back-end-ml6y.onrender.com/api/courses/${this.selectedCourse._id}`, {
                     ...this.selectedCourse,
                     results: this.selectedWinners,
                     isCompleted: true
