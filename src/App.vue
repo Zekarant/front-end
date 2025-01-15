@@ -15,7 +15,7 @@
                         </li>
                         <li class="nav-item d-flex align-items-center" v-else>
                             <span class="nav-link">Bonjour, {{ authStore.user.name }}</span>
-                            <a class="nav-link" href="/calendar">Calendrier</a>
+                            <a class="nav-link" @click="calendar">Calendrier</a>
                             <a class="nav-link" @click="logout">Se déconnecter</a>
                         </li>
                     </ul>
@@ -47,10 +47,15 @@ export default {
             router.push('/');
         };
 
+        const calendar = () => {
+            router.push('/calendar');
+        };
+
         return {
             authStore,
             goToLogin,
-            logout
+            logout,
+            calendar
         };
     }
 };
