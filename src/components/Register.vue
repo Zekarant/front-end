@@ -33,7 +33,7 @@ export default {
     methods: {
         async handleSubmit() {
             try {
-                const response = await axios.post('/api/auth/register', {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/auth/register', {
                     name: this.name,
                     email: this.email,
                     password: this.password,
