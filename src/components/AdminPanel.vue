@@ -68,7 +68,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nom</th>
+                        <th>Nom - Prénom</th>
                         <th>Équipe</th>
                         <th>Nationalité</th>
                         <th>Âge</th>
@@ -78,7 +78,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="cyclist in cyclists" :key="cyclist._id">
-                        <td>{{ cyclist.name }}</td>
+                        <td>{{ cyclist.lastName + ' - ' + cyclist.firstName }}</td>
                         <td>{{ cyclist.team }}</td>
                         <td>{{ cyclist.nationality }}</td>
                         <td>{{ cyclist.age }}</td>
