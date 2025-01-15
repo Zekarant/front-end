@@ -150,8 +150,12 @@
             <h3>Ajouter un cycliste</h3>
             <form @submit.prevent="addCyclist">
                 <div>
-                    <label for="name">Nom :</label>
-                    <input type="text" v-model="newCyclist.name" required class="form-control" />
+                    <label for="firstName">Prénom :</label>
+                    <input type="text" v-model="newCyclist.firstName" required class="form-control" />
+                </div>
+                <div>
+                    <label for="lastName">Nom :</label>
+                    <input type="text" v-model="newCyclist.lastName" required class="form-control" />
                 </div>
                 <div>
                     <label for="team">Équipe :</label>
@@ -159,11 +163,11 @@
                 </div>
                 <div>
                     <label for="nationality">Nationalité :</label>
-                    <input type="text" v-model="newCyclist.nationality" required class="form-control" />
+                    <input type="text" v-model="newCyclist.nationality" class="form-control" />
                 </div>
                 <div>
                     <label for="age">Âge :</label>
-                    <input type="number" v-model="newCyclist.age" required class="form-control" />
+                    <input type="number" v-model="newCyclist.age" class="form-control" />
                 </div>
                 <div>
                     <label for="wins">Victoires :</label>
@@ -173,12 +177,17 @@
                 <button type="button" @click="closeAddCyclistDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
         </div>
+
         <div v-if="showEditCyclistDialog" class="dialog">
             <h3>Modifier un cycliste</h3>
             <form @submit.prevent="updateCyclist">
                 <div>
-                    <label for="name">Nom :</label>
-                    <input type="text" v-model="selectedCyclist.name" required class="form-control" />
+                    <label for="firstName">Prénom :</label>
+                    <input type="text" v-model="selectedCyclist.firstName" required class="form-control" />
+                </div>
+                <div>
+                    <label for="lastName">Nom :</label>
+                    <input type="text" v-model="selectedCyclist.lastName" required class="form-control" />
                 </div>
                 <div>
                     <label for="team">Équipe :</label>
@@ -186,11 +195,11 @@
                 </div>
                 <div>
                     <label for="nationality">Nationalité :</label>
-                    <input type="text" v-model="selectedCyclist.nationality" required class="form-control" />
+                    <input type="text" v-model="selectedCyclist.nationality" class="form-control" />
                 </div>
                 <div>
                     <label for="age">Âge :</label>
-                    <input type="number" v-model="selectedCyclist.age" required class="form-control" />
+                    <input type="number" v-model="selectedCyclist.age" class="form-control" />
                 </div>
                 <div>
                     <label for="wins">Victoires :</label>
