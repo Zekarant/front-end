@@ -1,14 +1,17 @@
+<!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/components/Login.vue -->
 <template>
     <form @submit.prevent="handleSubmit">
         <div>
-            <label for="email">Email:</label>
-            <input type="email" v-model="email" required />
+            <label for="email">Email :</label>
+            <input type="email" v-model="email" required class="form-control" placeholder="Saisir votre mail" />
         </div>
         <div>
-            <label for="password">Password:</label>
-            <input type="password" v-model="password" required />
+            <label for="password">Mot de passe :</label>
+            <input type="password" v-model="password" required class="form-control"
+                placeholder="Saisir votre mot de passe" />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" class="btn btn-outline-primary">Connexion</button>
+        <button type="button" class="btn btn-outline-primary" @click="goToRegister">Inscription</button>
     </form>
 </template>
 
@@ -32,6 +35,9 @@ export default {
             } catch (error) {
                 console.error('Error logging in user:', error);
             }
+        },
+        goToRegister() {
+            this.$router.push('/register');
         }
     }
 };
@@ -62,5 +68,6 @@ button {
     padding: 10px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
 }
 </style>

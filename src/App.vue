@@ -1,22 +1,22 @@
+<!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/App.vue -->
 <template>
     <div id="app">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" href="#">Cyclism</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <router-link to="/" class="nav-link">Accueil</router-link>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item" v-if="!authStore.user">
+                            <a class="nav-link" @click="goToLogin">Se connecter / S'inscrire</a>
                         </li>
-                        <li class="nav-item">
-                            <router-link to="/calendar" class="nav-link">Calendrier</router-link>
+                        <li class="nav-item" v-else>
+                            <span class="nav-link">Bonjour, {{ authStore.user.name }}</span>
+                            <a class="nav-link" @click="logout">Se déconnecter</a>
                         </li>
-                        <li v-if="authStore.user && authStore.user.role === 'Admin'"><router-link to="/admin"
-                                class="nav-link">Admin Panel</router-link></li>
                     </ul>
                 </div>
             </div>
@@ -29,21 +29,28 @@
 
 <script>
 import { useAuthStore } from './store/index';
-import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
     setup() {
         const authStore = useAuthStore();
-        const user = computed(() => authStore.user);
-        const token = computed(() => authStore.token);
+        const router = useRouter();
+        authStore.checkSession();
 
-        return { authStore, user, token };
-    },
-    async created() {
-        const authStore = useAuthStore();
-        if (authStore.token) {
-            await authStore.fetchUser();
-        }
+        const goToLogin = () => {
+            router.push('/login');
+        };
+
+        const logout = () => {
+            authStore.logout();
+            router.push('/');
+        };
+
+        return {
+            authStore,
+            goToLogin,
+            logout
+        };
     }
 };
 </script>

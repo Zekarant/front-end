@@ -1,25 +1,20 @@
 <template>
     <form @submit.prevent="handleSubmit">
         <div>
-            <label for="name">Name:</label>
-            <input type="text" v-model="name" required />
+            <label for="name">Nom :</label>
+            <input type="text" v-model="name" required class="form-control"
+                placeholder="Saisir votre nom d'utilisateur" />
         </div>
         <div>
-            <label for="email">Email:</label>
-            <input type="email" v-model="email" required />
+            <label for="email">Email :</label>
+            <input type="email" v-model="email" required class="form-control" placeholder="Saisir votre email" />
         </div>
         <div>
-            <label for="password">Password:</label>
-            <input type="password" v-model="password" required />
+            <label for="password">Mot de passe :</label>
+            <input type="password" v-model="password" required class="form-control"
+                placeholder="Saisir votre mot de passe" />
         </div>
-        <div>
-            <label for="role">Role:</label>
-            <select v-model="role" required>
-                <option value="Member">Member</option>
-                <option value="Admin">Admin</option>
-            </select>
-        </div>
-        <button type="submit">Register</button>
+        <button type="submit" class="btn btn-outline-primary">S'inscrire</button>
     </form>
 </template>
 
