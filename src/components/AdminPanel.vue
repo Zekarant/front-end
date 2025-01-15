@@ -1,3 +1,4 @@
+<!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/components/AdminPanel.vue -->
 <template>
     <div class="container">
         <h2>Panneau d'administration</h2>
@@ -61,6 +62,31 @@
                 </tbody>
             </table>
         </div>
+        <div>
+            <h3>Gérer les cyclistes</h3>
+            <button @click="openAddCyclistDialog" class="btn btn-outline-success mb-3">Ajouter un cycliste</button>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Équipe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="cyclist in cyclists" :key="cyclist._id">
+                        <td>{{ cyclist.name }}</td>
+                        <td>{{ cyclist.team }}</td>
+                        <td>
+                            <button @click="editCyclist(cyclist)"
+                                class="btn btn-sm btn-outline-primary">Modifier</button>
+                            <button @click="deleteCyclist(cyclist._id)"
+                                class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div v-if="showEditDialog" class="dialog">
             <h3>Modifier une course</h3>
             <form @submit.prevent="updateCourse">
@@ -114,33 +140,34 @@
                 <button type="button" @click="closeEditDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
         </div>
-        <div v-if="showAnnounceWinnerDialog" class="dialog">
-            <h3>Annoncer les gagnants de la course {{ selectedCourse.name }}</h3>
-            <form @submit.prevent="announceWinner">
+        <div v-if="showAddCyclistDialog" class="dialog">
+            <h3>Ajouter un cycliste</h3>
+            <form @submit.prevent="addCyclist">
                 <div>
-                    <label for="winner1">Sélectionner le 1er :</label>
-                    <select v-model="selectedWinners[0]" required class="form-select">
-                        <option v-for="cyclist in cyclists" :key="cyclist._id" :value="cyclist._id">{{ cyclist.name }}
-                        </option>
-                    </select>
+                    <label for="name">Nom :</label>
+                    <input type="text" v-model="newCyclist.name" required class="form-control" />
                 </div>
                 <div>
-                    <label for="winner2">Sélectionner le 2ème :</label>
-                    <select v-model="selectedWinners[1]" required class="form-select">
-                        <option v-for="cyclist in cyclists" :key="cyclist._id" :value="cyclist._id">{{ cyclist.name }}
-                        </option>
-                    </select>
+                    <label for="team">Équipe :</label>
+                    <input type="text" v-model="newCyclist.team" required class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Ajouter le cycliste</button>
+                <button type="button" @click="closeAddCyclistDialog" class="btn btn-outline-secondary">Annuler</button>
+            </form>
+        </div>
+        <div v-if="showEditCyclistDialog" class="dialog">
+            <h3>Modifier un cycliste</h3>
+            <form @submit.prevent="updateCyclist">
+                <div>
+                    <label for="name">Nom :</label>
+                    <input type="text" v-model="selectedCyclist.name" required class="form-control" />
                 </div>
                 <div>
-                    <label for="winner3">Sélectionner le 3ème :</label>
-                    <select v-model="selectedWinners[2]" required class="form-select">
-                        <option v-for="cyclist in cyclists" :key="cyclist._id" :value="cyclist._id">{{ cyclist.name }}
-                        </option>
-                    </select>
+                    <label for="team">Équipe :</label>
+                    <input type="text" v-model="selectedCyclist.team" required class="form-control" />
                 </div>
-                <button type="submit" class="btn btn-outline-success">Annoncer les gagnants</button>
-                <button type="button" @click="closeAnnounceWinnerDialog"
-                    class="btn btn-outline-secondary">Annuler</button>
+                <button type="submit" class="btn btn-outline-primary">Modifier le cycliste</button>
+                <button type="button" @click="closeEditCyclistDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
         </div>
     </div>
@@ -158,8 +185,12 @@ export default {
             courses: [],
             cyclists: [],
             selectedCourse: null,
+            selectedCyclist: null,
+            newCyclist: { name: '', team: '' },
             selectedWinners: ['', '', ''],
             showEditDialog: false,
+            showAddCyclistDialog: false,
+            showEditCyclistDialog: false,
             showAnnounceWinnerDialog: false
         };
     },
@@ -335,6 +366,65 @@ export default {
             const stageDate = new Date(this.selectedCourse.stages[index].date);
             stageDate.setHours(10, 0, 0, 0); // Set time to 10:00 AM
             this.selectedCourse.stages[index].predictionEndTime = stageDate.toISOString().slice(0, 16);
+        },
+        openAddCyclistDialog() {
+            this.showAddCyclistDialog = true;
+        },
+        closeAddCyclistDialog() {
+            this.showAddCyclistDialog = false;
+            this.newCyclist = { name: '', team: '' };
+        },
+        async addCyclist() {
+            const authStore = useAuthStore();
+            try {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/cyclists', this.newCyclist, {
+                    headers: {
+                        Authorization: `Bearer ${authStore.token}`,
+                    },
+                });
+                console.log('Cyclist added:', response.data);
+                this.closeAddCyclistDialog();
+                await this.fetchCyclists();
+            } catch (error) {
+                console.error('Error adding cyclist:', error);
+            }
+        },
+        editCyclist(cyclist) {
+            this.selectedCyclist = { ...cyclist };
+            this.showEditCyclistDialog = true;
+        },
+        closeEditCyclistDialog() {
+            this.showEditCyclistDialog = false;
+            this.selectedCyclist = null;
+        },
+        async updateCyclist() {
+            const authStore = useAuthStore();
+            try {
+                const response = await axios.put(`https://back-end-ml6y.onrender.com/api/cyclists/${this.selectedCyclist._id}`, this.selectedCyclist, {
+                    headers: {
+                        Authorization: `Bearer ${authStore.token}`,
+                    },
+                });
+                console.log('Cyclist updated:', response.data);
+                this.closeEditCyclistDialog();
+                await this.fetchCyclists();
+            } catch (error) {
+                console.error('Error updating cyclist:', error);
+            }
+        },
+        async deleteCyclist(cyclistId) {
+            const authStore = useAuthStore();
+            try {
+                await axios.delete(`https://back-end-ml6y.onrender.com/api/cyclists/${cyclistId}`, {
+                    headers: {
+                        Authorization: `Bearer ${authStore.token}`,
+                    },
+                });
+                console.log('Cyclist deleted');
+                await this.fetchCyclists();
+            } catch (error) {
+                console.error('Error deleting cyclist:', error);
+            }
         }
     }
 };
