@@ -216,7 +216,7 @@ export default {
             cyclists: [],
             selectedCourse: null,
             selectedCyclist: null,
-            newCyclist: { name: '', team: '', nationality: '', age: 0, wins: 0 },
+            newCyclist: { firstName: '', lastName: '', team: '', nationality: '', age: null, wins: null },
             selectedWinners: ['', '', ''],
             showEditDialog: false,
             showAddCyclistDialog: false,
@@ -402,7 +402,7 @@ export default {
         },
         closeAddCyclistDialog() {
             this.showAddCyclistDialog = false;
-            this.newCyclist = { name: '', team: '', nationality: '', age: 0, wins: 0 };
+            this.newCyclist = { firstName: '', lastName: '', team: '', nationality: '', age: null, wins: null };
         },
         async addCyclist() {
             const authStore = useAuthStore();
