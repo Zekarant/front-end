@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async login(email, password) {
             try {
-                const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/auth/login', { email, password });
                 this.user = response.data.user;
                 this.token = response.data.token;
                 localStorage.setItem('user', JSON.stringify(this.user));
