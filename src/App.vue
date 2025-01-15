@@ -13,7 +13,7 @@
                         <li class="nav-item" v-if="!authStore.user">
                             <a class="nav-link" @click="goToLogin">Se connecter / S'inscrire</a>
                         </li>
-                        <li class="nav-item" v-else>
+                        <li class="nav-item d-flex align-items-center" v-else>
                             <span class="nav-link">Bonjour, {{ authStore.user.name }}</span>
                             <a class="nav-link" href="/calendar">Calendrier</a>
                             <a class="nav-link" @click="logout">Se déconnecter</a>
