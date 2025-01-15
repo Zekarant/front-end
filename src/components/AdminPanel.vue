@@ -1,4 +1,3 @@
-<!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/components/AdminPanel.vue -->
 <template>
     <div class="container">
         <h2>Panneau d'administration</h2>
@@ -95,7 +94,10 @@
                     <label for="stages">Stages :</label>
                     <div v-for="(stage, index) in selectedCourse.stages" :key="index">
                         <label>Stage {{ index + 1 }} Date:</label>
-                        <input type="date" v-model="stage.date" required />
+                        <input type="date" v-model="stage.date" @change="setDefaultPredictionEndTime(index)" required
+                            class="form-control" />
+                        <label>Fin de Prono:</label>
+                        <input type="datetime-local" v-model="stage.predictionEndTime" required class="form-control" />
                         <input type="hidden" v-model="stage.stageNumber" />
                         <button type="button" @click="removeStage(index)"
                             class="btn btn-sm btn-outline-danger">Supprimer le stage</button>
@@ -103,9 +105,9 @@
                     <button type="button" @click="addStage" class="btn btn-sm btn-outline-success">Ajouter un
                         stage</button>
                 </div>
-                <div>
-                    <label for="predictionEndTime">Date de fin des pronostics :</label>
-                    <input type="datetime-local" v-model="selectedCourse.predictionEndTime" required
+                <div v-if="selectedCourse.type === 'Tour'">
+                    <label for="generalPredictionEndTime">Fin de Prono pour le classement général :</label>
+                    <input type="datetime-local" v-model="selectedCourse.generalPredictionEndTime" required
                         class="form-control" />
                 </div>
                 <button type="submit" class="btn btn-outline-primary">Modifier la course</button>
@@ -320,7 +322,7 @@ export default {
             }
         },
         addStage() {
-            this.selectedCourse.stages.push({ date: '', stageNumber: this.selectedCourse.stages.length + 1 });
+            this.selectedCourse.stages.push({ date: '', stageNumber: this.selectedCourse.stages.length + 1, predictionEndTime: '' });
         },
         removeStage(index) {
             this.selectedCourse.stages.splice(index, 1);
@@ -328,6 +330,11 @@ export default {
             this.selectedCourse.stages.forEach((stage, i) => {
                 stage.stageNumber = i + 1;
             });
+        },
+        setDefaultPredictionEndTime(index) {
+            const stageDate = new Date(this.selectedCourse.stages[index].date);
+            stageDate.setHours(10, 0, 0, 0); // Set time to 10:00 AM
+            this.selectedCourse.stages[index].predictionEndTime = stageDate.toISOString().slice(0, 16);
         }
     }
 };

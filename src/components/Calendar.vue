@@ -1,8 +1,23 @@
 <!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/components/Calendar.vue -->
 <template>
     <div>
-        <vue-cal :events="events" :selected-date="today" :time="false" :disable-views="['years', 'year', 'month']"
-            hide-weekends @event-click="openPronosticDialog" />
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" :class="{ active: currentView === 'monthly' }" @click="currentView = 'monthly'">Vue
+                    Mensuelle</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" :class="{ active: currentView === 'annual' }" @click="currentView = 'annual'">Vue
+                    Annuelle</a>
+            </li>
+        </ul>
+        <div v-if="currentView === 'monthly'">
+            <vue-cal :events="events" :selected-date="today" :time="false" :disable-views="['years', 'year', 'month']"
+                hide-weekends @event-click="openPronosticDialog" />
+        </div>
+        <div v-else-if="currentView === 'annual'">
+            <AnnualCalendar :events="events" />
+        </div>
         <div v-if="showDialog" class="dialog">
             <h3>Faire un pronostic pour la course : {{ selectedEvent.title }} ({{ selectedEvent.category }})</h3>
             <div v-if="selectedEvent.type === 'Tour'">
@@ -32,10 +47,12 @@ import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css'; // Importation du CSS
 import axios from 'axios';
 import { useAuthStore } from '../store/index';
+import AnnualCalendar from './AnnualCalendar.vue';
 
 export default {
     components: {
         VueCal, // Déclare Vue Cal ici
+        AnnualCalendar
     },
     data() {
         return {
@@ -45,7 +62,8 @@ export default {
             selectedStage: null,
             cyclists: [],
             selectedCyclist: null,
-            today: new Date().toISOString().split('T')[0] // Date du jour par défaut
+            today: new Date().toISOString().split('T')[0], // Date du jour par défaut
+            currentView: 'monthly'
         };
     },
     methods: {
