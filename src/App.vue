@@ -16,6 +16,7 @@
                         <li class="nav-item d-flex align-items-center" v-else>
                             <span class="nav-link">Bonjour, {{ authStore.user.name }}</span>
                             <a class="nav-link" @click="calendar">Calendrier</a>
+                            <a class="nav-link" @click="admin" v-if="authStore.user.role === 'Admin'">Admin</a>
                             <a class="nav-link" @click="logout">Se déconnecter</a>
                         </li>
                     </ul>
@@ -51,11 +52,16 @@ export default {
             router.push('/calendar');
         };
 
+        const admin = () => {
+            router.push('/admin');
+        };
+
         return {
             authStore,
             goToLogin,
             logout,
-            calendar
+            calendar,
+            admin
         };
     }
 };
