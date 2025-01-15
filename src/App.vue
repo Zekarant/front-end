@@ -11,7 +11,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item" v-if="!authStore.user">
-                            <a class="nav-link" @click="goToLogin">Se connecter / S'inscrire</a>
+                            <a class="nav-link" @click="goToLogin">Se connecter</a>
                         </li>
                         <li class="nav-item d-flex align-items-center" v-else>
                             <span class="nav-link">Bonjour, {{ authStore.user.name }}</span>
