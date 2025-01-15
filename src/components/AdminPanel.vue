@@ -70,6 +70,9 @@
                     <tr>
                         <th>Nom</th>
                         <th>Équipe</th>
+                        <th>Nationalité</th>
+                        <th>Âge</th>
+                        <th>Victoires</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -77,6 +80,9 @@
                     <tr v-for="cyclist in cyclists" :key="cyclist._id">
                         <td>{{ cyclist.name }}</td>
                         <td>{{ cyclist.team }}</td>
+                        <td>{{ cyclist.nationality }}</td>
+                        <td>{{ cyclist.age }}</td>
+                        <td>{{ cyclist.wins }}</td>
                         <td>
                             <button @click="editCyclist(cyclist)"
                                 class="btn btn-sm btn-outline-primary">Modifier</button>
@@ -151,6 +157,18 @@
                     <label for="team">Équipe :</label>
                     <input type="text" v-model="newCyclist.team" required class="form-control" />
                 </div>
+                <div>
+                    <label for="nationality">Nationalité :</label>
+                    <input type="text" v-model="newCyclist.nationality" required class="form-control" />
+                </div>
+                <div>
+                    <label for="age">Âge :</label>
+                    <input type="number" v-model="newCyclist.age" required class="form-control" />
+                </div>
+                <div>
+                    <label for="wins">Victoires :</label>
+                    <input type="number" v-model="newCyclist.wins" required class="form-control" />
+                </div>
                 <button type="submit" class="btn btn-outline-primary">Ajouter le cycliste</button>
                 <button type="button" @click="closeAddCyclistDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
@@ -165,6 +183,18 @@
                 <div>
                     <label for="team">Équipe :</label>
                     <input type="text" v-model="selectedCyclist.team" required class="form-control" />
+                </div>
+                <div>
+                    <label for="nationality">Nationalité :</label>
+                    <input type="text" v-model="selectedCyclist.nationality" required class="form-control" />
+                </div>
+                <div>
+                    <label for="age">Âge :</label>
+                    <input type="number" v-model="selectedCyclist.age" required class="form-control" />
+                </div>
+                <div>
+                    <label for="wins">Victoires :</label>
+                    <input type="number" v-model="selectedCyclist.wins" required class="form-control" />
                 </div>
                 <button type="submit" class="btn btn-outline-primary">Modifier le cycliste</button>
                 <button type="button" @click="closeEditCyclistDialog" class="btn btn-outline-secondary">Annuler</button>
@@ -186,7 +216,7 @@ export default {
             cyclists: [],
             selectedCourse: null,
             selectedCyclist: null,
-            newCyclist: { name: '', team: '' },
+            newCyclist: { name: '', team: '', nationality: '', age: 0, wins: 0 },
             selectedWinners: ['', '', ''],
             showEditDialog: false,
             showAddCyclistDialog: false,
@@ -372,7 +402,7 @@ export default {
         },
         closeAddCyclistDialog() {
             this.showAddCyclistDialog = false;
-            this.newCyclist = { name: '', team: '' };
+            this.newCyclist = { name: '', team: '', nationality: '', age: 0, wins: 0 };
         },
         async addCyclist() {
             const authStore = useAuthStore();
