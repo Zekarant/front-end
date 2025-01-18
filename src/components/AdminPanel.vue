@@ -1,4 +1,3 @@
-<!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/components/AdminPanel.vue -->
 <template>
     <div class="container">
         <h2>Panneau d'administration</h2>
@@ -35,6 +34,7 @@
         </div>
         <div>
             <h3>Gérer les courses</h3>
+            <button @click="openAddCourseDialog" class="btn btn-outline-success mb-3">Ajouter une course</button>
             <table class="table">
                 <thead>
                     <tr>
@@ -42,6 +42,7 @@
                         <th>Date</th>
                         <th>Type</th>
                         <th>Catégorie</th>
+                        <th>Participants</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -51,6 +52,7 @@
                         <td>{{ course.date }}</td>
                         <td>{{ course.type }}</td>
                         <td>{{ course.category }}</td>
+                        <td>{{ course.participants.join(', ') }}</td>
                         <td>
                             <button @click="editCourse(course)" class="btn btn-sm btn-outline-primary">Modifier</button>
                             <button @click="deleteCourse(course._id)"
@@ -68,21 +70,21 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nom - Prénom</th>
+                        <th>Prénom</th>
+                        <th>Nom</th>
                         <th>Équipe</th>
                         <th>Nationalité</th>
                         <th>Âge</th>
-                        <th>Victoires</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="cyclist in cyclists" :key="cyclist._id">
-                        <td>{{ cyclist.lastName + ' - ' + cyclist.firstName }}</td>
+                        <td>{{ cyclist.firstName }}</td>
+                        <td>{{ cyclist.lastName }}</td>
                         <td>{{ cyclist.team }}</td>
                         <td>{{ cyclist.nationality }}</td>
                         <td>{{ cyclist.age }}</td>
-                        <td>{{ cyclist.wins }}</td>
                         <td>
                             <button @click="editCyclist(cyclist)"
                                 class="btn btn-sm btn-outline-primary">Modifier</button>
@@ -120,6 +122,12 @@
                         <option value="Tour 2.1">Tour 2.1</option>
                         <option value="Tour 2.WT">Tour 2.WT</option>
                         <option value="Grand Tour">Grand Tour</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="participants">Participants :</label>
+                    <select v-model="selectedCourse.participants" multiple class="form-select">
+                        <option v-for="team in teams" :key="team" :value="team">{{ team }}</option>
                     </select>
                 </div>
                 <div v-if="selectedCourse.type === 'Tour'">
@@ -169,15 +177,10 @@
                     <label for="age">Âge :</label>
                     <input type="number" v-model="newCyclist.age" class="form-control" />
                 </div>
-                <div>
-                    <label for="wins">Victoires :</label>
-                    <input type="number" v-model="newCyclist.wins" required class="form-control" />
-                </div>
                 <button type="submit" class="btn btn-outline-primary">Ajouter le cycliste</button>
                 <button type="button" @click="closeAddCyclistDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
         </div>
-
         <div v-if="showEditCyclistDialog" class="dialog">
             <h3>Modifier un cycliste</h3>
             <form @submit.prevent="updateCyclist">
@@ -201,17 +204,71 @@
                     <label for="age">Âge :</label>
                     <input type="number" v-model="selectedCyclist.age" class="form-control" />
                 </div>
-                <div>
-                    <label for="wins">Victoires :</label>
-                    <input type="number" v-model="selectedCyclist.wins" required class="form-control" />
-                </div>
                 <button type="submit" class="btn btn-outline-primary">Modifier le cycliste</button>
                 <button type="button" @click="closeEditCyclistDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
         </div>
+        <div v-if="showAddCourseDialog" class="dialog">
+            <h3>Ajouter une course</h3>
+            <form @submit.prevent="addCourse">
+                <div>
+                    <label for="name">Nom :</label>
+                    <input type="text" v-model="newCourse.name" required class="form-control" />
+                </div>
+                <div>
+                    <label for="date">Date :</label>
+                    <input type="date" v-model="newCourse.date" required class="form-control" />
+                </div>
+                <div>
+                    <label for="type">Type :</label>
+                    <select v-model="newCourse.type" required class="form-select">
+                        <option value="Classic">Classic</option>
+                        <option value="Tour">Tour</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="category">Catégorie :</label>
+                    <select v-model="newCourse.category" required class="form-select">
+                        <option value="Classique 1.1">Classique 1.1</option>
+                        <option value="Classique 1.WT">Classique 1.WT</option>
+                        <option value="Monument">Monument</option>
+                        <option value="Tour 2.1">Tour 2.1</option>
+                        <option value="Tour 2.WT">Tour 2.WT</option>
+                        <option value="Grand Tour">Grand Tour</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="participants">Participants :</label>
+                    <select v-model="newCourse.participants" multiple class="form-select">
+                        <option v-for="team in teams" :key="team" :value="team">{{ team }}</option>
+                    </select>
+                </div>
+                <div v-if="newCourse.type === 'Tour'">
+                    <label for="stages">Stages :</label>
+                    <div v-for="(stage, index) in newCourse.stages" :key="index">
+                        <label>Stage {{ index + 1 }} Date:</label>
+                        <input type="date" v-model="stage.date" @change="setDefaultPredictionEndTime(index)" required
+                            class="form-control" />
+                        <label>Fin de Prono:</label>
+                        <input type="datetime-local" v-model="stage.predictionEndTime" required class="form-control" />
+                        <input type="hidden" v-model="stage.stageNumber" />
+                        <button type="button" @click="removeStage(index)"
+                            class="btn btn-sm btn-outline-danger">Supprimer le stage</button>
+                    </div>
+                    <button type="button" @click="addStage" class="btn btn-sm btn-outline-success">Ajouter un
+                        stage</button>
+                </div>
+                <div v-if="newCourse.type === 'Tour'">
+                    <label for="generalPredictionEndTime">Fin de Prono pour le classement général :</label>
+                    <input type="datetime-local" v-model="newCourse.generalPredictionEndTime" required
+                        class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Ajouter la course</button>
+                <button type="button" @click="closeAddCourseDialog" class="btn btn-outline-secondary">Annuler</button>
+            </form>
+        </div>
     </div>
 </template>
-
 <script>
 import axios from 'axios';
 import { useAuthStore } from '../store/index';
@@ -223,13 +280,16 @@ export default {
             userSearchQuery: '',
             courses: [],
             cyclists: [],
+            teams: [],
             selectedCourse: null,
             selectedCyclist: null,
-            newCyclist: { firstName: '', lastName: '', team: '', nationality: '', age: null, wins: null },
+            newCourse: { name: '', date: '', type: '', category: '', participants: [], stages: [], generalPredictionEndTime: '' },
+            newCyclist: { firstName: '', lastName: '', team: '', nationality: '', age: null },
             selectedWinners: ['', '', ''],
             showEditDialog: false,
             showAddCyclistDialog: false,
             showEditCyclistDialog: false,
+            showAddCourseDialog: false,
             showAnnounceWinnerDialog: false
         };
     },
@@ -248,6 +308,7 @@ export default {
         await this.fetchUsers();
         await this.fetchCourses();
         await this.fetchCyclists();
+        await this.fetchTeams();
     },
     methods: {
         async fetchUsers() {
@@ -285,8 +346,17 @@ export default {
                     },
                 });
                 this.cyclists = response.data;
+                this.teams = [...new Set(this.cyclists.map(cyclist => cyclist.team))];
             } catch (error) {
                 console.error('Error fetching cyclists:', error);
+            }
+        },
+        async fetchTeams() {
+            try {
+                const response = await axios.get('https://back-end-ml6y.onrender.com/api/teams');
+                this.teams = response.data;
+            } catch (error) {
+                console.error('Error fetching teams:', error);
             }
         },
         isCurrentUser(user) {
@@ -411,7 +481,7 @@ export default {
         },
         closeAddCyclistDialog() {
             this.showAddCyclistDialog = false;
-            this.newCyclist = { firstName: '', lastName: '', team: '', nationality: '', age: null, wins: null };
+            this.newCyclist = { firstName: '', lastName: '', team: '', nationality: '', age: null };
         },
         async addCyclist() {
             const authStore = useAuthStore();
@@ -464,11 +534,32 @@ export default {
             } catch (error) {
                 console.error('Error deleting cyclist:', error);
             }
+        },
+        openAddCourseDialog() {
+            this.showAddCourseDialog = true;
+        },
+        closeAddCourseDialog() {
+            this.showAddCourseDialog = false;
+            this.newCourse = { name: '', date: '', type: '', category: '', participants: [], stages: [], generalPredictionEndTime: '' };
+        },
+        async addCourse() {
+            const authStore = useAuthStore();
+            try {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/courses', this.newCourse, {
+                    headers: {
+                        Authorization: `Bearer ${authStore.token}`,
+                    },
+                });
+                console.log('Course added:', response.data);
+                this.closeAddCourseDialog();
+                await this.fetchCourses();
+            } catch (error) {
+                console.error('Error adding course:', error);
+            }
         }
     }
 };
 </script>
-
 <style scoped>
 form {
     display: flex;
