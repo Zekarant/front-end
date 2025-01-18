@@ -303,6 +303,20 @@
                 <button type="button" @click="closeAddTeamDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
         </div>
+        <div v-if="showAnnounceWinnerDialog" class="dialog">
+            <h3>Annoncer les gagnants</h3>
+            <form @submit.prevent="announceWinner">
+                <div v-for="(winner, index) in selectedWinners" :key="index">
+                    <label for="winner">Gagnant {{ index + 1 }} :</label>
+                    <select v-model="selectedWinners[index]" class="form-select">
+                        <option v-for="team in teams" :key="team._id" :value="team.name">{{ team.name }}</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Annoncer les gagnants</button>
+                <button type="button" @click="closeAnnounceWinnerDialog"
+                    class="btn btn-outline-secondary">Annuler</button>
+            </form>
+        </div>
     </div>
 </template>
 <script>
@@ -482,10 +496,8 @@ export default {
         async announceWinner() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.put(`https://back-end-ml6y.onrender.com/api/courses/${this.selectedCourse._id}`, {
-                    ...this.selectedCourse,
-                    results: this.selectedWinners,
-                    isCompleted: true
+                const response = await axios.put(`https://back-end-ml6y.onrender.com/api/courses/${this.selectedCourse._id}/winners`, {
+                    winners: this.selectedWinners
                 }, {
                     headers: {
                         Authorization: `Bearer ${authStore.token}`,
@@ -609,6 +621,15 @@ export default {
                 await this.fetchTeams();
             } catch (error) {
                 console.error('Error adding team:', error);
+            }
+        },
+        async deleteTeam(teamId) {
+            try {
+                await axios.delete(`https://back-end-ml6y.onrender.com/api/teams/${teamId}`);
+                console.log('Team deleted');
+                await this.fetchTeams();
+            } catch (error) {
+                console.error('Error deleting team:', error);
             }
         }
     }
