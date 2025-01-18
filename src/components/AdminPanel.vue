@@ -33,6 +33,27 @@
             </table>
         </div>
         <div>
+            <h3>Gérer les équipes</h3>
+            <button @click="openAddTeamDialog" class="btn btn-outline-success mb-3">Ajouter une équipe</button>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom de l'équipe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="team in teams" :key="team._id">
+                        <td>{{ team.name }}</td>
+                        <td>
+                            <button @click="deleteTeam(team._id)"
+                                class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
             <h3>Gérer les courses</h3>
             <button @click="openAddCourseDialog" class="btn btn-outline-success mb-3">Ajouter une course</button>
             <table class="table">
@@ -127,7 +148,7 @@
                 <div>
                     <label for="participants">Participants :</label>
                     <select v-model="selectedCourse.participants" multiple class="form-select">
-                        <option v-for="team in teams" :key="team" :value="team">{{ team }}</option>
+                        <option v-for="team in teams" :key="team._id" :value="team.name">{{ team.name }}</option>
                     </select>
                 </div>
                 <div v-if="selectedCourse.type === 'Tour'">
@@ -240,7 +261,7 @@
                 <div>
                     <label for="participants">Participants :</label>
                     <select v-model="newCourse.participants" multiple class="form-select">
-                        <option v-for="team in teams" :key="team" :value="team">{{ team }}</option>
+                        <option v-for="team in teams" :key="team._id" :value="team.name">{{ team.name }}</option>
                     </select>
                 </div>
                 <div v-if="newCourse.type === 'Tour'">
@@ -267,6 +288,17 @@
                 <button type="button" @click="closeAddCourseDialog" class="btn btn-outline-secondary">Annuler</button>
             </form>
         </div>
+        <div v-if="showAddTeamDialog" class="dialog">
+            <h3>Ajouter une équipe</h3>
+            <form @submit.prevent="addTeam">
+                <div>
+                    <label for="teamName">Nom de l'équipe :</label>
+                    <input type="text" v-model="newTeam.name" required class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-outline-primary">Ajouter l'équipe</button>
+                <button type="button" @click="closeAddTeamDialog" class="btn btn-outline-secondary">Annuler</button>
+            </form>
+        </div>
     </div>
 </template>
 <script>
@@ -285,11 +317,13 @@ export default {
             selectedCyclist: null,
             newCourse: { name: '', date: '', type: '', category: '', participants: [], stages: [], generalPredictionEndTime: '' },
             newCyclist: { firstName: '', lastName: '', team: '', nationality: '', age: null },
+            newTeam: { name: '' },
             selectedWinners: ['', '', ''],
             showEditDialog: false,
             showAddCyclistDialog: false,
             showEditCyclistDialog: false,
             showAddCourseDialog: false,
+            showAddTeamDialog: false,
             showAnnounceWinnerDialog: false
         };
     },
@@ -346,7 +380,6 @@ export default {
                     },
                 });
                 this.cyclists = response.data;
-                this.teams = [...new Set(this.cyclists.map(cyclist => cyclist.team))];
             } catch (error) {
                 console.error('Error fetching cyclists:', error);
             }
@@ -555,6 +588,23 @@ export default {
                 await this.fetchCourses();
             } catch (error) {
                 console.error('Error adding course:', error);
+            }
+        },
+        openAddTeamDialog() {
+            this.showAddTeamDialog = true;
+        },
+        closeAddTeamDialog() {
+            this.showAddTeamDialog = false;
+            this.newTeam = { name: '' };
+        },
+        async addTeam() {
+            try {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/teams', this.newTeam);
+                console.log('Team added:', response.data);
+                this.closeAddTeamDialog();
+                await this.fetchTeams();
+            } catch (error) {
+                console.error('Error adding team:', error);
             }
         }
     }
