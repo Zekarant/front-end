@@ -188,7 +188,9 @@
                 </div>
                 <div>
                     <label for="team">Équipe :</label>
-                    <input type="text" v-model="newCyclist.team" required class="form-control" />
+                    <select v-model="newCyclist.team" required class="form-select">
+                        <option v-for="team in teams" :key="team._id" :value="team.name">{{ team.name }}</option>
+                    </select>
                 </div>
                 <div>
                     <label for="nationality">Nationalité :</label>
@@ -215,7 +217,9 @@
                 </div>
                 <div>
                     <label for="team">Équipe :</label>
-                    <input type="text" v-model="selectedCyclist.team" required class="form-control" />
+                    <select v-model="selectedCyclist.team" required class="form-select">
+                        <option v-for="team in teams" :key="team._id" :value="team.name">{{ team.name }}</option>
+                    </select>
                 </div>
                 <div>
                     <label for="nationality">Nationalité :</label>
