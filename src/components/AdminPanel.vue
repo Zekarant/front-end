@@ -33,27 +33,6 @@
             </table>
         </div>
         <div>
-            <h3>Gérer les équipes</h3>
-            <button @click="openAddTeamDialog" class="btn btn-outline-success mb-3">Ajouter une équipe</button>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nom de l'équipe</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="team in teams" :key="team._id">
-                        <td>{{ team.name }}</td>
-                        <td>
-                            <button @click="deleteTeam(team._id)"
-                                class="btn btn-sm btn-outline-danger">Supprimer</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div>
             <h3>Gérer les courses</h3>
             <button @click="openAddCourseDialog" class="btn btn-outline-success mb-3">Ajouter une course</button>
             <table class="table">
@@ -80,6 +59,27 @@
                                 class="btn btn-sm btn-outline-danger">Supprimer</button>
                             <button @click="openAnnounceWinnerDialog(course)"
                                 class="btn btn-sm btn-outline-success">Annoncer les gagnants</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h3>Gérer les équipes</h3>
+            <button @click="openAddTeamDialog" class="btn btn-outline-success mb-3">Ajouter une équipe</button>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom de l'équipe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="team in teams" :key="team._id">
+                        <td>{{ team.name }}</td>
+                        <td>
+                            <button @click="deleteTeam(team._id)"
+                                class="btn btn-sm btn-outline-danger">Supprimer</button>
                         </td>
                     </tr>
                 </tbody>
@@ -145,11 +145,10 @@
                         <option value="Grand Tour">Grand Tour</option>
                     </select>
                 </div>
-                <div>
-                    <label for="participants">Participants :</label>
-                    <select v-model="selectedCourse.participants" multiple class="form-select">
-                        <option v-for="team in teams" :key="team._id" :value="team.name">{{ team.name }}</option>
-                    </select>
+                <div v-if="selectedCourse.type === 'Classic'">
+                    <label for="predictionEndTime">Fin de Prono :</label>
+                    <input type="datetime-local" v-model="selectedCourse.predictionEndTime" required
+                        class="form-control" />
                 </div>
                 <div v-if="selectedCourse.type === 'Tour'">
                     <label for="stages">Stages :</label>
@@ -262,11 +261,9 @@
                         <option value="Grand Tour">Grand Tour</option>
                     </select>
                 </div>
-                <div>
-                    <label for="participants">Participants :</label>
-                    <select v-model="newCourse.participants" multiple class="form-select">
-                        <option v-for="team in teams" :key="team._id" :value="team.name">{{ team.name }}</option>
-                    </select>
+                <div v-if="newCourse.type === 'Classic'">
+                    <label for="predictionEndTime">Fin de Prono :</label>
+                    <input type="datetime-local" v-model="newCourse.predictionEndTime" required class="form-control" />
                 </div>
                 <div v-if="newCourse.type === 'Tour'">
                     <label for="stages">Stages :</label>
@@ -333,7 +330,7 @@ export default {
             teams: [],
             selectedCourse: null,
             selectedCyclist: null,
-            newCourse: { name: '', date: '', type: '', category: '', participants: [], stages: [], generalPredictionEndTime: '' },
+            newCourse: { name: '', date: '', type: '', category: '', participants: [], stages: [], generalPredictionEndTime: '', predictionEndTime: '' },
             newCyclist: { firstName: '', lastName: '', team: '', nationality: '', age: null },
             newTeam: { name: '' },
             selectedWinners: ['', '', ''],
@@ -589,7 +586,7 @@ export default {
         },
         closeAddCourseDialog() {
             this.showAddCourseDialog = false;
-            this.newCourse = { name: '', date: '', type: '', category: '', participants: [], stages: [], generalPredictionEndTime: '' };
+            this.newCourse = { name: '', date: '', type: '', category: '', participants: [], stages: [], generalPredictionEndTime: '', predictionEndTime: '' };
         },
         async addCourse() {
             const authStore = useAuthStore();

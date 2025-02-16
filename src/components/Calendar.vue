@@ -1,4 +1,3 @@
-<!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/components/Calendar.vue -->
 <template>
     <div>
         <ul class="nav nav-tabs">

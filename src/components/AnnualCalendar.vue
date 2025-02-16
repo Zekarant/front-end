@@ -1,4 +1,3 @@
-<!-- filepath: /d:/wamp64/www/projectSportExcel/front-end/src/components/AnnualCalendar.vue -->
 <template>
     <div>
         <h2>Vue Annuelle du Calendrier</h2>

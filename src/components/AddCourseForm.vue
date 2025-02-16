@@ -89,7 +89,7 @@ export default {
         async handleSubmit() {
             const authStore = useAuthStore();
             try {
-                const response = await axios.post('http://localhost:5000/api/courses', {
+                const response = await axios.post('https://back-end-ml6y.onrender.com/api/courses', {
                     name: this.name,
                     date: this.date,
                     type: this.type,
