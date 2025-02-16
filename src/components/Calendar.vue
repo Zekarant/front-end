@@ -12,7 +12,7 @@
         </ul>
         <div v-if="currentView === 'monthly'">
             <vue-cal :events="events" :selected-date="today" :time="false" :disable-views="['years', 'year', 'month']"
-                hide-weekends @event-click="openPronosticDialog" />
+                @event-click="openPronosticDialog" />
         </div>
         <div v-else-if="currentView === 'annual'">
             <AnnualCalendar :events="events" />
